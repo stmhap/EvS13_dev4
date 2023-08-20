@@ -74,8 +74,8 @@ train_transforms = A.Compose(
         # A.Posterize(p=0.1),
         # A.CLAHE(p=0.1),
         #A.Normalize(mean=mean, std=std),
-        #A.LongestMaxSize(max_size=int(MAX_IMAGE_SIZE * scale)),
-        A.LongestMaxSize(max_size=int(MAX_IMAGE_SIZE * multi_resolution_scale)),
+        A.LongestMaxSize(max_size=int(MAX_IMAGE_SIZE * scale)),
+        #A.LongestMaxSize(max_size=int(MAX_IMAGE_SIZE * multi_resolution_scale)),
         A.PadIfNeeded(
             min_height=int(MAX_IMAGE_SIZE * scale),
             min_width=int(MAX_IMAGE_SIZE * scale),
