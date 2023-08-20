@@ -5,6 +5,7 @@ from yolo3 import YOLOv3
 from dataset import YOLODataset
 from loss import YoloLossCumulative
 from torch import optim
+from torchmetrics import MeanMetric
 from torch.utils.data import DataLoader
 from torchinfo import summary
 
