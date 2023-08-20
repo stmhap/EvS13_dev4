@@ -14,7 +14,8 @@ from utils import ResizeDataLoader, check_class_accuracy, plot_couple_examples, 
 
 class Yolo3_PL_Model(LightningModule):
     def __init__(self, in_channels=3, nclasses=config.NUM_CLASSES, batch_size=config.BATCH_SIZE,
-                 learning_rate=config.LEARNING_RATE, collect_garbage='batch', nepochs=config.NUM_EPOCHS):
+                 learning_rate=config.LEARNING_RATE, collect_garbage='batch', 
+                 nepochs=config.NUM_EPOCHS, lambda_noobj=5, lambda_box=10):
         super(Yolo3_PL_Model, self).__init__()
         self.network_architecture = YOLOv3(in_channels, nclasses)
         self.loss_criterion = YoloLossCumulative(config.SCALED_ANCHORS, lambda_noobj=lambda_noobj, lambda_box=lambda_box)
