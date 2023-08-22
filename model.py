@@ -44,21 +44,22 @@ class Yolo3_PL_Model(LightningModule):
     def forward(self, x):
         return self.network_architecture(x)
 
-    # def common_step(self, batch):
-    #     x, y = batch
-    #     out = self.forward(x)
-    #     loss = self.loss_criterion(out, y, self.scaled_anchors)
-    #     del out, x, y
-    #     return loss
+    def common_step(self, batch, metric):
+        x, y = batch
+        out = self.forward(x)
+        loss = self.criterion(out, y)
+        metric.update(loss, x.shape[0])
+        del x, y, out
+        return loss
 
     def training_step(self, batch, batch_idx):
         #loss = self.common_step(batch)
-        x, y = batch
-        out = self.forward(x)
-        loss = self.loss_criterion(out, y)
-        self.model_train_loss.update(loss, x.shape[0])
-        del out, x, y
-
+        # x, y = batch
+        # out = self.forward(x)
+        # loss = self.loss_criterion(out, y)
+        # self.model_train_loss.update(loss, x.shape[0])
+        # del out, x, y
+        loss = self.common_step(batch, self.model_train_loss)
         #self.log(f"train_loss", loss, on_epoch=True, prog_bar=True, logger=True)
         # Logging the training loss for visualization
         self.log("train_loss", loss, on_epoch=True, prog_bar=True, logger=True)  
@@ -68,12 +69,12 @@ class Yolo3_PL_Model(LightningModule):
 
     def validation_step(self, batch, batch_idx):
         #loss = self.common_step(batch)
-        x, y = batch
-        out = self.forward(x)
-        loss = self.loss_criterion(out, y)
-        self.model_val_loss.update(loss, x.shape[0])
-        del out, x, y
-
+        # x, y = batch
+        # out = self.forward(x)
+        # loss = self.loss_criterion(out, y)
+        # self.model_val_loss.update(loss, x.shape[0])
+        # del out, x, y
+        loss = self.common_step(batch, self.model_val_loss)
         self.log(f"val_loss", loss, on_epoch=True, prog_bar=True, logger=True, sync_dist=True)
         #self.val_step_outputs.append(loss)
         return loss
@@ -86,7 +87,8 @@ class Yolo3_PL_Model(LightningModule):
         return self.forward(x)
 
     def configure_optimizers(self):
-        self.optimizer = optim.Adam(self.parameters(), lr=self.learning_rate/100, weight_decay=config.WEIGHT_DECAY)
+        #self.optimizer = optim.Adam(self.parameters(), lr=self.learning_rate/100, weight_decay=config.WEIGHT_DECAY)
+        self.optimizer = optim.SGD(self.parameters(), lr=self.learning_rate/100, momentum=0.9)
         scheduler = optim.lr_scheduler.OneCycleLR(
             self.optimizer,
             max_lr=self.learning_rate,
@@ -113,7 +115,7 @@ class Yolo3_PL_Model(LightningModule):
             img_dir=config.IMG_DIR,
             label_dir=config.LABEL_DIR,
             anchors=config.ANCHORS,
-            mosaic=0.75
+            mosaic=0.5
         )
 
         train_loader = ResizeDataLoader(

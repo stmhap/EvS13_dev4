@@ -82,7 +82,8 @@ train_transforms = A.Compose(
             border_mode=cv2.BORDER_CONSTANT,
             value=0
         ),
-        A.Rotate(limit=10, interpolation=1, border_mode=4),
+        A.Rotate(limit=10),
+		#, interpolation=1, border_mode=4),
         A.RandomCrop(width=MAX_IMAGE_SIZE, height=MAX_IMAGE_SIZE),
         A.ColorJitter(brightness=0.6, contrast=0.6, saturation=0.6, hue=0.6, p=0.4),
         A.ShiftScaleRotate(rotate_limit=20, p=1.0, border_mode=cv2.BORDER_CONSTANT, value=0),
