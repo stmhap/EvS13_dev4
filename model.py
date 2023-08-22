@@ -174,7 +174,7 @@ class Yolo3_PL_Model(LightningModule):
         # print(f"Val loss {val_epoch_average}")
 
         print(f"Epoch: {self.trainer.current_epoch + 1}, Global Steps: {self.global_step}, Val Loss: {self.model_val_loss.compute()}")
-        self.model_train_loss.reset()        
+        self.model_val_loss.reset()        
 
         if self.collect_garbage == 'epoch':
             garbage_collection_cuda()         
