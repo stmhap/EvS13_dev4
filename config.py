@@ -71,9 +71,9 @@ scale = 1.1
 multi_resolution_scale = [0.8, 1.0, 1.4]
 train_transforms = A.Compose(
     [
-        # A.Posterize(p=0.1),
-        # A.CLAHE(p=0.1),
-        #A.Normalize(mean=mean, std=std),
+        A.Posterize(p=0.1),
+        A.CLAHE(p=0.1),
+        A.Normalize(mean=mean, std=std),
         A.LongestMaxSize(max_size=int(MAX_IMAGE_SIZE * scale)),
         #A.LongestMaxSize(max_size=int(MAX_IMAGE_SIZE * multi_resolution_scale)),
         A.PadIfNeeded(
@@ -88,10 +88,7 @@ train_transforms = A.Compose(
         A.ShiftScaleRotate(rotate_limit=20, p=1.0, border_mode=cv2.BORDER_CONSTANT, value=0),
         A.HorizontalFlip(p=0.5),
         A.Blur(p=0.1),
-        A.CLAHE(p=0.1),
-        A.Posterize(p=0.1),
         A.ToGray(p=0.1),
-        A.Normalize(mean=mean, std=std),
         A.ChannelShuffle(p=0.05),
         ToTensorV2()
     ],

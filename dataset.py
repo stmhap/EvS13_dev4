@@ -175,7 +175,7 @@ def test():
         transform=transform,
     )
     scaled_anchors = config.SCALED_ANCHORS
-    loader = ResizeDataLoader(dataset=dataset, batch_size=2, shuffle=True, resolutions=config.MULTIRES,
+    loader = ResizeDataLoader(dataset=dataset, batch_size=32, shuffle=True, resolutions=config.MULTIRES,
                               cum_weights=config.CUM_PROBS)
     for x, y in itertools.islice(loader, 1):
         batch_size = x.shape[0]

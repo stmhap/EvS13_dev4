@@ -392,7 +392,7 @@ def cells_to_bboxes(predictions, anchors, S, is_preds=True):
 
 
 def check_class_accuracy(model, loader, threshold):
-    #model.eval()
+    model.eval()
     tot_class_preds, correct_class = 0, 0
     tot_noobj, correct_noobj = 0, 0
     tot_obj, correct_obj = 0, 0
@@ -421,7 +421,7 @@ def check_class_accuracy(model, loader, threshold):
     print(f"Class accuracy is: {(correct_class / (tot_class_preds + 1e-16)) * 100:2f}%")
     print(f"No obj accuracy is: {(correct_noobj / (tot_noobj + 1e-16)) * 100:2f}%")
     print(f"Obj accuracy is: {(correct_obj / (tot_obj + 1e-16)) * 100:2f}%")
-    #model.train()
+    model.train()
 
 
 def get_mean_std(loader):
@@ -466,8 +466,8 @@ class ResizeDataLoader(DataLoader):
         self.resolutions = resolutions
         self.cum_weights = cum_weights
         self.resizers = None
-        if (self.resolutions is not None and self.cum_weights is not None 
-                and len(self.resolutions) == len(self.cum_weights)):
+        if self.resolutions is not None and self.cum_weights is not None \
+                and len(self.resolutions) == len(self.cum_weights):
             self.resizers = [Resize(res, antialias=True) for res in self.resolutions]
 
     def __iter__(self):
