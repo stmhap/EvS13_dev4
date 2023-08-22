@@ -236,7 +236,7 @@ class Yolo3_PL_Model(LightningModule):
 def main():
     num_classes = 20
     IMAGE_SIZE = 416
-    INPUT_SIZE = IMAGE_SIZE # * 2
+    INPUT_SIZE = IMAGE_SIZE * 2
     yolo3_model = Yolo3_PL_Model(nclasses=num_classes)
     print(summary(yolo3_model, input_size=(2, 3, INPUT_SIZE, INPUT_SIZE)))
     inp = torch.randn((2, 3, INPUT_SIZE, INPUT_SIZE))
