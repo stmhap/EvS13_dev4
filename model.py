@@ -173,7 +173,7 @@ class Yolo3_PL_Model(LightningModule):
         # self.val_step_outputs.clear()
         # print(f"Val loss {val_epoch_average}")
 
-        print(f"Epoch: {self.trainer.current_epoch + 1}, Global Steps: {self.global_step}, Val Loss: {self.model_val_loss.compute()}")
+        print(f"Epoch: {self.trainer.current_epoch + 1}, Global Steps: {self.global_step}, Val Loss: {self.model_val_loss.compute():.2f}")
         self.model_val_loss.reset()        
 
         if self.collect_garbage == 'epoch':
@@ -187,7 +187,7 @@ class Yolo3_PL_Model(LightningModule):
         
         epoch = self.trainer.current_epoch + 1
         #print("Epoch: ", epoch)
-        print(f"Epoch: {epoch}, Global Steps: {self.global_step}, Train Loss: {self.model_train_loss.compute()}")
+        print(f"Epoch: {epoch}, Global Steps: {self.global_step}, Train Loss: {self.model_train_loss.compute():.2f}")
         self.model_train_loss.reset()
         # train_epoch_average = torch.stack(self.train_step_outputs).mean()
         # self.train_step_outputs.clear()
