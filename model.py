@@ -62,7 +62,7 @@ class Yolo3_PL_Model(LightningModule):
         #self.log(f"train_loss", loss, on_epoch=True, prog_bar=True, logger=True)
         # Logging the training loss for visualization
         self.log("train_loss", loss, on_epoch=True, prog_bar=True, logger=True)  
-        self.train_step_outputs.append(loss)
+        #self.train_step_outputs.append(loss)
 
         return loss
 
@@ -75,7 +75,7 @@ class Yolo3_PL_Model(LightningModule):
         del out, x, y
 
         self.log(f"val_loss", loss, on_epoch=True, prog_bar=True, logger=True, sync_dist=True)
-        self.val_step_outputs.append(loss)
+        #self.val_step_outputs.append(loss)
         return loss
 
     def predict_step(self, batch, batch_idx, dataloader_idx=0):
@@ -167,9 +167,12 @@ class Yolo3_PL_Model(LightningModule):
             garbage_collection_cuda()
 
     def on_validation_epoch_end(self):
-        val_epoch_average = torch.stack(self.val_step_outputs).mean()
-        self.val_step_outputs.clear()
-        print(f"Val loss {val_epoch_average}")
+        # val_epoch_average = torch.stack(self.val_step_outputs).mean()
+        # self.val_step_outputs.clear()
+        # print(f"Val loss {val_epoch_average}")
+
+        print(f"Epoch: {self.trainer.current_epoch + 1}, Global Steps: {self.global_step}, Val Loss: {self.model_val_loss.compute()}")
+        self.model_train_loss.reset()        
 
         if self.collect_garbage == 'epoch':
             garbage_collection_cuda()         
@@ -181,11 +184,12 @@ class Yolo3_PL_Model(LightningModule):
             save_checkpoint(self.network_architecture, self.optimizer, filename=config.CHECKPOINT_FILE)
         
         epoch = self.trainer.current_epoch + 1
-        print("Epoch: ", epoch)
-
-        train_epoch_average = torch.stack(self.train_step_outputs).mean()
-        self.train_step_outputs.clear()
-        print(f"Train loss {train_epoch_average}")
+        #print("Epoch: ", epoch)
+        print(f"Epoch: {epoch}, Global Steps: {self.global_step}, Train Loss: {self.model_train_loss.compute()}")
+        self.model_train_loss.reset()
+        # train_epoch_average = torch.stack(self.train_step_outputs).mean()
+        # self.train_step_outputs.clear()
+        # print(f"Train loss {train_epoch_average}")
 
         if epoch > 1 and epoch % 10 == 0:
             plot_couple_examples(self.network_architecture, self.val_dataloader(), 0.6, 0.5, self.scaled_anchors)
