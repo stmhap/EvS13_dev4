@@ -47,7 +47,7 @@ class Yolo3_PL_Model(LightningModule):
     def common_step(self, batch, metric):
         x, y = batch
         out = self.forward(x)
-        loss = self.criterion(out, y)
+        loss = self.loss_criterion(out, y)
         metric.update(loss, x.shape[0])
         del x, y, out
         return loss
